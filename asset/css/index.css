@@ -1,0 +1,7 @@
+.addMenu {
+    display: none;
+}
+
+.addMenu.active {
+    display: block;
+}
