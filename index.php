@@ -54,10 +54,10 @@ if (isset($_POST['tambah'])) {
 </head>
 <body>
     <div class="addMenu active" id="create">
-        <button type="submit" onclick="showForm('home')">gas</button>
+        <button type="submit" onclick="showForm('home', 'addMenu')">gas</button>
     </div>
     <div class="addMenu" id="home">
-        <form action="index.php" method="POST" enctype="multipart/form-data">
+        <form action="index.php" name="plus" method="POST" enctype="multipart/form-data">
             <input type="text" name="barang" id="barang" placeholder="nama barang">
             <input type="number" name="quantity" id="quantity" placeholder="jumlah">
             <input type="number" name="harga" id="harga" placeholder="harga">

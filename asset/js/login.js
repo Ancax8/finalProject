@@ -10,16 +10,27 @@ tombol = document.getElementById('gas');
 loginForm = document.getElementById("login");
 registerForm = document.getElementById("register");
 
-function showForm(formId) {
-    let semuaForm = document.querySelectorAll(".addMenu");
 
+
+function showForm(formId, groupClass) {
+
+    // Mengambil semua elemen berdasarkan class kelompok
+    let semuaForm = document.querySelectorAll("." + groupClass);
+
+    // Menghilangkan class active dari semua elemen
     semuaForm.forEach(function(form) {
         form.classList.remove("active");
     });
 
+    // Mengambil elemen berdasarkan ID yang diklik
     let form = document.getElementById(formId);
-    form.classList.add("active");
+
+    // Menambahkan class active
+    if (form) {
+        form.classList.add("active");
+    }
 }
+
 
 function cekNama() {
     if (inputNama.value.length <= 8) {

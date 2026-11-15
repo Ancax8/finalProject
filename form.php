@@ -26,7 +26,7 @@ include "loginregis.php";
                     <img src="asset/gambar/closeEye.png" alt="closeEye" id="closeEye">
                 </div>
                 <button id="gas" type="submit" name="gas"> GAS</button>
-                <p>You dont have account yet?  <a href="#"onclick="showForm('register')">Register</a></p>
+                <p>You dont have account yet?  <a href="#"onclick="showForm('register', 'login')">Register</a></p>
             </form>
         </div>
         <div class="login" id="register">
@@ -42,7 +42,7 @@ include "loginregis.php";
                 <input type="text" placeholder="Password" id="pwd2" required>
                 <p id="confirm"></p>
                 <button type="submit" name="submit"> GAS</button>
-                <p>Remember your acount?  <a href="#" onclick="showForm('login')">Sing Up</a></p>
+                <p>Remember your acount?  <a href="#" onclick="showForm('login', 'login')">Sing Up</a></p>
             </form>
         </div>
         <div class="login active" id="newPassword">
