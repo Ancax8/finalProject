@@ -1,33 +1,42 @@
+
 <?php
-$alert = null;
 
+// ==========================================
 // PROSES REGISTER
-if (isset($_POST['submit'])) {
+// ==========================================
 
+if (isset($_POST['action']) && $_POST['action'] === 'create') {
+
+    // Mengambil data dari form Register
     $nama = $_POST['nma'];
     $username = $_POST['nma3'];
     $telephone = $_POST['tlp'];
     $email = $_POST['mail'];
     $password = $_POST['pw'];
 
+    // Query untuk menyimpan data pengguna
     $data = "INSERT INTO pengguna (nama, username, telephone, email, password)
              VALUES ('$nama', '$username', '$telephone', '$email', '$password')";
 
+    // Menjalankan query
     if ($db->query($data)) {
-        $alert = [
-            "icon" => "success",
-            "title" => "Registrasi Berhasil!",
-            "text" => "Data berhasil disimpan."
-        ];
+
+        // Register berhasil
+
     } else {
-        $alert = [
-            "icon" => "error",
-            "title" => "Registrasi Gagal!",
-            "text" => $db->error
-        ];
+
+        // Register gagal
+        // Error dapat diperiksa melalui $db->error
+
     }
 }
-if (isset($_POST['gas'])) {
+
+
+// ==========================================
+// PROSES LOGIN
+// ==========================================
+
+if (isset($_POST['action']) && $_POST['action'] === 'login') {
 
     $nama = $_POST['nama'];
     $password = $_POST['pwd'];
@@ -40,19 +49,39 @@ if (isset($_POST['gas'])) {
 
     if ($berhasil && $berhasil->num_rows > 0) {
 
-        $alert = [
+        $user = $berhasil->fetch_assoc();
+
+        // Session pengguna
+        $_SESSION['user_id'] = $user['id_pengguna'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['nama'] = $user['nama'];
+
+        // Notifikasi berhasil
+        $_SESSION['toast'] = [
             "icon" => "success",
-            "title" => "Login Berhasil!",
-            "text" => "Selamat datang, $nama!"
+            "title" => "Selamat Datang Kembali!",
+            "text" => "Login berhasil. Senang melihat kamu kembali!"
         ];
+
+        // Tandai bahwa pengguna harus diarahkan ke dashboard
+        $_SESSION['redirect_after_toast'] = true;
+
+        header("Location: form.php");
+        exit;
 
     } else {
 
-        $alert = [
+        // Notifikasi gagal
+        $_SESSION['toast'] = [
             "icon" => "error",
             "title" => "Login Gagal!",
-            "text" => "Username atau password salah."
+            "text" => "Username atau password yang kamu masukkan tidak sesuai."
         ];
+
+        header("Location: form.php");
+        exit;
     }
 }
+
+
 ?>
