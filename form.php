@@ -69,7 +69,7 @@ unset($_SESSION['redirect_after_toast']);
                         <div class="pass_box">
                             <input type="password" id="pwd" name="pwd" placeholder="Masukkan password" required>
 
-                            <img src="asset/gambar/closeEye.png" alt="Tampilkan password" id="closeEye">
+                            <img src="asset/gambar/bahan/closeEye.png" alt="Tampilkan password" id="closeEye">
                         </div>
                     </div>
                     <div class="login-options">

@@ -49,10 +49,10 @@ function togglePassword(input, eye) {
 
     if (input.type === "password") {
         input.type = "text";
-        eye.src = "asset/gambar/openEye.png";
+        eye.src = "asset/gambar/bahan/openEye.png";
     } else {
         input.type = "password";
-        eye.src = "asset/gambar/closeEye.png";
+        eye.src = "asset/gambar/bahan/closeEye.png";
     }
 }
 

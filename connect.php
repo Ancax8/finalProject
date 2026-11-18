@@ -8,8 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Konfigurasi database
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "anca";
+$password = "001122";
 $dbname = "finalproject";
 
 // Koneksi database
