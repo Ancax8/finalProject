@@ -1,7 +1,7 @@
 
-const menu = document.getElementById('menu');
-const list = document.getElementById('main');
+const menu = document.getElementById("menu");
+const main = document.querySelector(".main");
 
-menu.addEventListener("click", () => {
-    list.classList.toggle('show');
+menu.addEventListener("click", function () {
+    main.classList.toggle("show");
 });
