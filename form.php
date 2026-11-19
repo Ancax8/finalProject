@@ -3,6 +3,9 @@ include "connect.php";
 include "loginregis.php";
 // $toast = $_SESSION['toast'] ?? null;
 // unset($_SESSION['toast']);
+$activeForm = $_SESSION['active_form'] ?? 'login';
+
+unset($_SESSION['active_form']);
 $toast = $_SESSION['toast'] ?? null;
 $redirectAfterToast = $_SESSION['redirect_after_toast'] ?? false;
 
@@ -50,7 +53,7 @@ unset($_SESSION['redirect_after_toast']);
         <section class="auth-panel">
 
             <!-- LOGIN -->
-            <div class="login active" id="login">
+            <div class="login <?= $activeForm === 'login' ? 'active' : '' ?>" id="login">
                 <form method="POST" action="form.php">
 
                     <div class="form-header">
@@ -97,7 +100,7 @@ unset($_SESSION['redirect_after_toast']);
             </div>
 
             <!-- REGISTER -->
-            <div class="login" id="register">
+            <div class="login <?= $activeForm === 'register' ? 'active' : '' ?>" id="register">
                 <form method="POST" action="form.php">
 
                     <div class="form-header">
@@ -163,27 +166,27 @@ unset($_SESSION['redirect_after_toast']);
     <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
     <!-- <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script> -->
-<?php if ($toast !== null): ?>
-<script>
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: <?= json_encode($toast['icon']) ?>,
-        title: <?= json_encode($toast['title']) ?>,
-        text: <?= json_encode($toast['text']) ?>,
-        showConfirmButton: false,
-        showCloseButton: true,
-        timer: 2500,
-        timerProgressBar: true
-    }).then(() => {
-        <?php if ($redirectAfterToast): ?>
-            window.location.href = "index.php";
-        <?php endif; ?>
-    });
-</script>
-<?php endif; ?>
+    <?php if ($toast !== null): ?>
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: <?= json_encode($toast['icon']) ?>,
+                title: <?= json_encode($toast['title']) ?>,
+                text: <?= json_encode($toast['text']) ?>,
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 2500,
+                timerProgressBar: true
+            }).then(() => {
+                <?php if ($redirectAfterToast): ?>
+                    window.location.href = "index.php";
+                <?php endif; ?>
+            });
+        </script>
+    <?php endif; ?>
 
-<script src="asset/js/login.js"></script>
+    <script src="asset/js/login.js"></script>
 </body>
 
 </html>
