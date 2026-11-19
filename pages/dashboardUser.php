@@ -65,10 +65,10 @@
 
                 <div class="category-list">
                     <button class="category-btn active">Semua</button>
-                    <button class="category-btn">Kategori1</button>
-                    <button class="category-btn">Kategori2</button>
-                    <button class="category-btn">Kategori3</button>
-                    <button class="category-btn">Kategori4</button>
+                    <button class="category-btn">Kategori</button>
+                    <button class="category-btn">Kategori</button>
+                    <button class="category-btn">Kategori</button>
+                    <button class="category-btn">Kategori</button>
                 </div>
             </section>
 
@@ -121,9 +121,7 @@
                                 Beli
                             </button>
                         </div>
-
                     <?php } ?>
-
                 </div>
 
                 <!-- NAVIGASI HALAMAN -->

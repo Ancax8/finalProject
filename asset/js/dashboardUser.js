@@ -4,15 +4,11 @@
 // ========================================
 
 const cart = [];
-
 const buyButtons = document.querySelectorAll(".buy-btn");
-
 const cartBar = document.querySelector(".cart-bar");
 const cartPopup = document.getElementById("cartPopup");
-
 const openCart = document.getElementById("openCart");
 const closeCart = document.getElementById("closeCart");
-
 const cartItems = document.getElementById("cartItems");
 const cartSubtotal = document.getElementById("cartSubtotal");
 const cartCount = document.getElementById("cartCount");
