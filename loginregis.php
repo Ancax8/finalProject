@@ -1,4 +1,3 @@
-
 <?php
 
 // ==========================================
@@ -7,28 +6,168 @@
 
 if (isset($_POST['action']) && $_POST['action'] === 'create') {
 
-    // Mengambil data dari form Register
-    $nama = $_POST['nma'];
-    $username = $_POST['nma3'];
-    $telephone = $_POST['tlp'];
-    $email = $_POST['mail'];
-    $password = $_POST['pw'];
+    // Mengambil dan membersihkan data
+    $nama = trim($_POST['nma'] ?? '');
+    $username = trim($_POST['nma3'] ?? '');
+    $telephone = trim($_POST['tlp'] ?? '');
+    $email = strtolower(trim($_POST['mail'] ?? ''));
+    $password = $_POST['pw'] ?? '';
 
-    // Query untuk menyimpan data pengguna
-    $data = "INSERT INTO pengguna (nama, username, telephone, email, password)
-             VALUES ('$nama', '$username', '$telephone', '$email', '$password')";
+    // Validasi input kosong
+    if (
+        $nama === '' ||
+        $username === '' ||
+        $telephone === '' ||
+        $email === '' ||
+        $password === ''
+    ) {
 
-    // Menjalankan query
-    if ($db->query($data)) {
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Data Belum Lengkap!",
+            "text" => "Silakan lengkapi seluruh formulir pendaftaran."
+        ];
 
-        // Register berhasil
+        // Validasi format email
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Email Tidak Valid!",
+            "text" => "Silakan masukkan alamat email yang benar."
+        ];
+
+        // Validasi panjang password
+    } elseif (strlen($password) < 8) {
+
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Password Terlalu Pendek!",
+            "text" => "Password harus memiliki minimal 8 karakter."
+        ];
+
+        $_SESSION['active_form'] = 'register';
+
+        header("Location: form.php");
+        exit;
     } else {
 
-        // Register gagal
-        // Error dapat diperiksa melalui $db->error
+        // ==========================================
+        // CEK USERNAME
+        // ==========================================
 
+        $cekUsername = $db->prepare(
+            "SELECT id_pengguna FROM pengguna WHERE username = ?"
+        );
+
+        $cekUsername->bind_param("s", $username);
+        $cekUsername->execute();
+        $hasilUsername = $cekUsername->get_result();
+
+        // ==========================================
+        // CEK EMAIL
+        // ==========================================
+
+        $cekEmail = $db->prepare(
+            "SELECT id_pengguna FROM pengguna WHERE email = ?"
+        );
+
+        $cekEmail->bind_param("s", $email);
+        $cekEmail->execute();
+        $hasilEmail = $cekEmail->get_result();
+
+        // Username dan email sudah digunakan
+        if ($hasilUsername->num_rows > 0 && $hasilEmail->num_rows > 0) {
+
+            $_SESSION['toast'] = [
+                "icon" => "error",
+                "title" => "Pendaftaran Gagal!",
+                "text" => "Username dan email sudah digunakan."
+            ];
+
+            // Username sudah digunakan
+        } elseif ($hasilUsername->num_rows > 0) {
+
+            $_SESSION['toast'] = [
+                "icon" => "error",
+                "title" => "Username Sudah Digunakan!",
+                "text" => "Silakan gunakan username yang berbeda."
+            ];
+
+            // Email sudah digunakan
+        } elseif ($hasilEmail->num_rows > 0) {
+
+            $_SESSION['toast'] = [
+                "icon" => "error",
+                "title" => "Email Sudah Terdaftar!",
+                "text" => "Silakan gunakan alamat email yang berbeda."
+            ];
+
+        } else {
+
+            // ==========================================
+            // HASH PASSWORD
+            // ==========================================
+
+            // $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+            // ==========================================
+            // SIMPAN DATA PENGGUNA
+            // ==========================================
+
+            $insert = $db->prepare(
+                "INSERT INTO pengguna
+                (nama, username, telephone, email, password)
+                VALUES (?, ?, ?, ?, ?)"
+            );
+
+            $insert->bind_param(
+                "sssss",
+                $nama,
+                $username,
+                $telephone,
+                $email,
+                $passwordHash
+            );
+
+            if ($insert->execute()) {
+
+                $_SESSION['toast'] = [
+                    "icon" => "success",
+                    "title" => "Akun Berhasil Dibuat!",
+                    "text" => "Pendaftaran berhasil. Silakan login menggunakan akun kamu."
+                ];
+
+            } else {
+
+                // Penanganan jika terjadi duplikasi saat INSERT
+                if ($insert->errno === 1062) {
+
+                    $_SESSION['toast'] = [
+                        "icon" => "error",
+                        "title" => "Data Sudah Digunakan!",
+                        "text" => "Username atau email sudah terdaftar."
+                    ];
+
+                } else {
+
+                    $_SESSION['toast'] = [
+                        "icon" => "error",
+                        "title" => "Pendaftaran Gagal!",
+                        "text" => "Terjadi kesalahan saat menyimpan data."
+                    ];
+                }
+            }
+
+            $insert->close();
+        }
+
+        $cekUsername->close();
+        $cekEmail->close();
     }
+
+    header("Location: form.php");
+    exit;
 }
 
 
@@ -38,50 +177,57 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
 
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
 
-    $nama = $_POST['nama'];
-    $password = $_POST['pwd'];
+    $nama = trim($_POST['nama'] ?? '');
+    $password = $_POST['pwd'] ?? '';
 
-    $tod = "SELECT * FROM pengguna
-            WHERE (username = '$nama' OR email = '$nama')
-            AND password = '$password'";
+    // Mencari pengguna berdasarkan username atau email
+    $stmt = $db->prepare(
+        "SELECT id_pengguna, nama, username, password
+         FROM pengguna
+         WHERE username = ? OR email = ?
+         LIMIT 1"
+    );
 
-    $berhasil = $db->query($tod);
+    $stmt->bind_param("ss", $nama, $nama);
+    $stmt->execute();
 
-    if ($berhasil && $berhasil->num_rows > 0) {
+    $hasil = $stmt->get_result();
+    $user = $hasil->fetch_assoc();
 
-        $user = $berhasil->fetch_assoc();
+    // Memeriksa password
+    if ($user && password_verify($password, $user['password'])) {
 
-        // Session pengguna
+        // Membuat session baru setelah login berhasil
+        session_regenerate_id(true);
+
         $_SESSION['user_id'] = $user['id_pengguna'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['nama'] = $user['nama'];
 
-        // Notifikasi berhasil
+        // Toast berhasil
         $_SESSION['toast'] = [
             "icon" => "success",
             "title" => "Selamat Datang Kembali!",
             "text" => "Login berhasil. Senang melihat kamu kembali!"
         ];
 
-        // Tandai bahwa pengguna harus diarahkan ke dashboard
+        // Redirect setelah toast
         $_SESSION['redirect_after_toast'] = true;
-
-        header("Location: form.php");
-        exit;
 
     } else {
 
-        // Notifikasi gagal
+        // Toast gagal
         $_SESSION['toast'] = [
             "icon" => "error",
             "title" => "Login Gagal!",
             "text" => "Username atau password yang kamu masukkan tidak sesuai."
         ];
-
-        header("Location: form.php");
-        exit;
     }
-}
 
+    $stmt->close();
+
+    header("Location: form.php");
+    exit;
+}
 
 ?>
