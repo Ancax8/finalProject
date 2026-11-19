@@ -6,6 +6,9 @@ include "connect.php";
 include "loginregis.php";
 // $toast = $_SESSION['toast'] ?? null;
 // unset($_SESSION['toast']);
+$activeForm = $_SESSION['active_form'] ?? 'login';
+
+unset($_SESSION['active_form']);
 $toast = $_SESSION['toast'] ?? null;
 $redirectAfterToast = $_SESSION['redirect_after_toast'] ?? false;
 
@@ -53,7 +56,7 @@ unset($_SESSION['redirect_after_toast']);
         <section class="auth-panel">
 
             <!-- LOGIN -->
-            <div class="login active" id="login">
+            <div class="login <?= $activeForm === 'login' ? 'active' : '' ?>" id="login">
                 <form method="POST" action="form.php">
 
                     <div class="form-header">
@@ -100,7 +103,7 @@ unset($_SESSION['redirect_after_toast']);
             </div>
 
             <!-- REGISTER -->
-            <div class="login" id="register">
+            <div class="login <?= $activeForm === 'register' ? 'active' : '' ?>" id="register">
                 <form method="POST" action="form.php">
 
                     <div class="form-header">
@@ -180,13 +183,13 @@ unset($_SESSION['redirect_after_toast']);
         timerProgressBar: true
     }).then(() => {
         <?php if ($redirectAfterToast): ?>
-            window.location.href = "layout/navbar.html";
+            window.location.href = "index.php";
         <?php endif; ?>
     });
 </script>
 <?php endif; ?>
 
-<script src="asset/js/login.js"></script>
+    <script src="asset/js/login.js"></script>
 </body>
 
 </html>
