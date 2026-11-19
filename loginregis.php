@@ -109,7 +109,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
             // HASH PASSWORD
             // ==========================================
 
-            // $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
             // ==========================================
             // SIMPAN DATA PENGGUNA

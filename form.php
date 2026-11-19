@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+echo $_SERVER['REQUEST_URI'];
 include "connect.php";
 include "loginregis.php";
 // $toast = $_SESSION['toast'] ?? null;
@@ -166,25 +170,25 @@ unset($_SESSION['redirect_after_toast']);
     <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
     <!-- <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script> -->
-    <?php if ($toast !== null): ?>
-        <script>
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: <?= json_encode($toast['icon']) ?>,
-                title: <?= json_encode($toast['title']) ?>,
-                text: <?= json_encode($toast['text']) ?>,
-                showConfirmButton: false,
-                showCloseButton: true,
-                timer: 2500,
-                timerProgressBar: true
-            }).then(() => {
-                <?php if ($redirectAfterToast): ?>
-                    window.location.href = "index.php";
-                <?php endif; ?>
-            });
-        </script>
-    <?php endif; ?>
+<?php if ($toast !== null): ?>
+<script>
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: <?= json_encode($toast['icon']) ?>,
+        title: <?= json_encode($toast['title']) ?>,
+        text: <?= json_encode($toast['text']) ?>,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 2500,
+        timerProgressBar: true
+    }).then(() => {
+        <?php if ($redirectAfterToast): ?>
+            window.location.href = "/anca/pages/dashboardUser.php";
+        <?php endif; ?>
+    });
+</script>
+<?php endif; ?>
 
     <script src="asset/js/login.js"></script>
 </body>
