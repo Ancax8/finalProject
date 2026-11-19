@@ -35,7 +35,7 @@
 
                 <nav>
                     <a href="#">Profil</a>
-                    <a href="#">Favorit</a>
+                    <a href="#" id="favoriteMenu">Favorit</a>
                     <a href="#">Riwayat Pesanan</a>
                     <a href="#">Ubah Password</a>
                     <a href="#">Language</a>
@@ -101,7 +101,9 @@
 
                         <div class="product-card">
 
-                            <button class="favorite-btn" type="button">
+                            <button class="favorite-btn" type="button" data-name="<?= htmlspecialchars($item[0]) ?>"
+                                data-category="<?= htmlspecialchars($item[1]) ?>"
+                                data-price="<?= htmlspecialchars($item[2]) ?>">
                                 ☆
                             </button>
 
@@ -125,17 +127,45 @@
                 </div>
 
                 <!-- NAVIGASI HALAMAN -->
-                <div class="pagination">
-                    <button type="button" disabled>Sebelumnya</button>
-                    <button type="button" class="page-number active">1</button>
-                    <button type="button" class="page-number">2</button>
-                    <button type="button" class="page-number">3</button>
-                    <button type="button">Berikutnya</button>
+                <div class="pagination" id="productPagination">
                 </div>
 
             </section>
 
+            <!-- POPUP FAVORIT SAYA -->
+            <div class="favorite-overlay" id="favoritePage">
 
+                <div class="favorite-modal">
+
+                    <!-- HEADER -->
+                    <div class="favorite-header">
+                        <h2>FAVORIT SAYA</h2>
+
+                        <button type="button" id="closeFavorite">X</button>
+                    </div>
+
+                    <!-- PENCARIAN -->
+                    <div class="favorite-search">
+                        <input type="text" id="favoriteSearch" placeholder="⌕ Cari nama produk...">
+                    </div>
+
+                    <!-- DAFTAR PRODUK FAVORIT -->
+                    <div class="favorite-list" id="favoriteList">
+                    </div>
+
+                    <!-- FOOTER DAN PAGINATION -->
+                    <div class="favorite-footer">
+
+                        <p id="favoriteInfo">Menampilkan 0 data</p>
+
+                        <div class="favorite-pagination" id="favoritePagination">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
         </section>
 
     </main>
