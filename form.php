@@ -2,6 +2,7 @@
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
+echo $_SERVER['REQUEST_URI'];
 include "connect.php";
 include "loginregis.php";
 // $toast = $_SESSION['toast'] ?? null;
@@ -183,7 +184,7 @@ unset($_SESSION['redirect_after_toast']);
         timerProgressBar: true
     }).then(() => {
         <?php if ($redirectAfterToast): ?>
-            window.location.href = "index.php";
+            window.location.href = "/anca/pages/dashboardUser.php";
         <?php endif; ?>
     });
 </script>

@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $servername = "localhost";
 $username = "anca";
 $password = "001122";
-$dbname = "finalproject";
+$dbname = "finalProject";
 
 // Koneksi database
 $db = new mysqli($servername, $username, $password, $dbname);
