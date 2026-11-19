@@ -11,19 +11,8 @@
 </head>
 
 <body>
-
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="greeting">
-            Hai, <span>Nama User</span>!
-        </div>
-
-        <div class="navbar-menu">
-            <input type="text" placeholder="Cari produk...">
-            <button>Notifikasi</button>
-            <button>Menu</button>
-        </div>
-    </header>
+    <?php include "../layout/navbar.php"; ?>
+  
 
     <!-- KONTEN UTAMA -->
     <main class="dashboard-container">

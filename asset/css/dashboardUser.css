@@ -14,49 +14,7 @@ body {
     color: #333;
     padding-bottom: 130px;
 }
-/* =================================
-   NAVBAR
-================================= */
-.navbar {
-  height: 65px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #ddd;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 25px;
-}
-
-.greeting {
-  font-size: 15px;
-}
-
-.greeting span {
-  font-weight: bold;
-}
-
-.navbar-menu {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.navbar-menu input {
-  width: 220px;
-  padding: 9px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.navbar-menu button {
-  padding: 9px 12px;
-  border: 1px solid #ccc;
-  background-color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
 
 /* =================================
    LAYOUT DASHBOARD
