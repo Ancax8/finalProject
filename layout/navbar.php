@@ -20,8 +20,8 @@
         <div class="main">
             <ul id="main">
                 <li href="#">Dashboard</li>
-                <li href="#">Kategori Produk</li> 
-                <li href="#">Stok Produk</li> 
+                <li href="#">keranjang</li> 
+                <li href="#">produk suka</li> 
                 <li href="#">Barang Masuk</li> 
                 <li href="#">Barang Keluar</li> 
             </ul>
