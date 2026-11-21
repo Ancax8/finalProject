@@ -19,17 +19,18 @@
         </div>
         <div class="main">
             <ul id="main">
-                <li href="#">Dashboard</li>
-                <li href="#">Kategori Produk</li> 
-                <li href="#">Stok Produk</li> 
-                <li href="#">Barang Masuk</li> 
-                <li href="#">Barang Keluar</li> 
+                <li href="#">Profile</li>
+                <li href="#" id="favoritMenu" >Favorit</li> 
+                <li href="#">Riwayat Pesanan</li> 
+                <li href="#">Language</li> 
+                <li href="#">Help</li> 
             </ul>
         </div>
         <div class="icon-list" id="menu">
             <i class="ph ph-list"></i>
         </div>
     </div>
+    <script src= ../asset/js/dashboardUser.js></script>
     <script src="../asset/js/navbar.js"></script>
 </body>
 </html>

@@ -563,16 +563,8 @@ favoriteMenu.addEventListener("click", function (event) {
 
     event.preventDefault();
 
-    console.log("1. Tombol Favorit diklik");
 
     favoritePage.classList.add("show");
-
-    console.log("2. Class popup:", favoritePage.className);
-
-    console.log(
-        "3. Display popup:",
-        window.getComputedStyle(favoritePage).display
-    );
 
     favoriteCurrentPage = 1;
     favoriteSearch.value = "";

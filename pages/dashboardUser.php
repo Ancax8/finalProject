@@ -16,30 +16,6 @@
 
     <!-- KONTEN UTAMA -->
     <main class="dashboard-container">
-
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="profile-menu">
-                <h3>Nama Toko</h3>
-
-                <nav>
-                    <a href="#">Profil</a>
-                    <a href="#" id="favoriteMenu">Favorit</a>
-                    <a href="#">Riwayat Pesanan</a>
-                    <a href="#">Ubah Password</a>
-                    <a href="#">Language</a>
-                    <a href="#">Help</a>
-                </nav>
-            </div>
-
-            <div class="about-us">
-                <h4>About Us</h4>
-                <p>Alamat Utama Kita</p>
-                <p>Nomor Telepon</p>
-                <p>Alamat Email</p>
-            </div>
-        </aside>
-
         <!-- AREA PRODUK -->
         <section class="main-content">
 
