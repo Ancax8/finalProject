@@ -43,17 +43,16 @@ function showForm(formId, groupClass) {
 // ==========================================
 // 3. SHOW / HIDE PASSWORD
 // ==========================================
+
 function togglePassword(input, eye) {
     if (!input || !eye) return;
 
     if (input.type === "password") {
         input.type = "text";
         eye.src = "asset/gambar/bahan/openEye.png";
-        eye.alt = "Sembunyikan password";
     } else {
         input.type = "password";
         eye.src = "asset/gambar/bahan/closeEye.png";
-        eye.alt = "Tampilkan password";
     }
 }
 
