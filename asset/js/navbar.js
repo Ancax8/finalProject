@@ -87,3 +87,22 @@ if (languageMenu) {
         }
     });
 }
+// DROPDOWN PROFILE
+const profile = document.getElementById("profile");
+const profileMenu = document.getElementById("profileMenu");
+
+if (profile && profileMenu) {
+
+    profile.addEventListener("click", function (event) {
+        event.stopPropagation();
+        profileMenu.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!profileMenu.contains(event.target) &&
+            !profile.contains(event.target)) {
+            profileMenu.classList.remove("show");
+        }
+    });
+
+}

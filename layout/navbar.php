@@ -1,7 +1,17 @@
 <div class="navbar">
-    <div class="profile">
-        <img src="../asset/gambar/bahan/profile.png" alt="#" id="profile" name="profile">
+    <div class="profile profile-dropdown">
+
+        <img src="../asset/gambar/bahan/profile.png" alt="Profile" id="profile" name="profile">
+
         <label id="status"></label>
+
+        <div class="profile-menu" id="profileMenu">
+            <div class="logout-btn" id="logoutBtn">
+                <i class="ph ph-sign-out"></i>
+                <span data-id="Logout" data-en="Logout">Logout</span>
+            </div>
+        </div>
+
     </div>
 
     <div class="pencarian">
@@ -9,7 +19,7 @@
             data-en="search products...">
         <img src="../asset/gambar/bahan/pencarian.png" alt="cari">
     </div>
-
+    
     <div class="main">
         <ul id="main">
             <li>

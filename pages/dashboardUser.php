@@ -34,15 +34,29 @@
                 </h3>
 
                 <div class="category-list">
-                    <button class="category-btn active" data-id="Semua" data-en="All">Semua</button>
 
-                    <button class="category-btn" data-id="Kategori" data-en="Category">Kategori</button>
+                    <button class="category-btn active" data-category="Semua" data-id="Semua" data-en="All">
+                        Semua
+                    </button>
 
-                    <button class="category-btn" data-id="Kategori" data-en="Category">Kategori</button>
+                    <button class="category-btn" data-category="Alat Tulis" data-id="Alat Tulis" data-en="Stationery">
+                        Alat Tulis
+                    </button>
 
-                    <button class="category-btn" data-id="Kategori" data-en="Category">Kategori</button>
+                    <button class="category-btn" data-category="Buku" data-id="Buku" data-en="Books">
+                        Buku
+                    </button>
 
-                    <button class="category-btn" data-id="Kategori" data-en="Category">Kategori</button>
+                    <button class="category-btn" data-category="Surat-Menyurat" data-id="Surat-Menyurat"
+                        data-en="Correspondence">
+                        Surat-Menyurat
+                    </button>
+
+                    <button class="category-btn" data-category="Perlengkapan Kantor" data-id="Perlengkapan Kantor"
+                        data-en="Office Supplies">
+                        Perlengkapan Kantor
+                    </button>
+
                 </div>
             </section>
 
