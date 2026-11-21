@@ -16,6 +16,7 @@ body {
     padding-bottom: 130px;
 }
 
+<<<<<<< HEAD
 /* 2. NAVBAR */
 .navbar {
     min-height: 65px;
@@ -51,6 +52,8 @@ body {
     background: #fff;
     cursor: pointer;
 }
+=======
+>>>>>>> e17a1b41f6b13562f870cd8595a2d49894c36f21
 
 /* 3. DASHBOARD LAYOUT */
 .dashboard-container {
