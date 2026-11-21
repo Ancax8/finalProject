@@ -171,8 +171,6 @@
 
         <button class="cart-arrow">➜</button>
     </section>
-    <!-- POPUP KERANJANG -->
-    <!-- POPUP KERANJANG -->
     <div class="cart-popup" id="cartPopup">
 
         <div class="cart-popup-header">
