@@ -1,11 +1,10 @@
 
 const menu = document.getElementById("menu");
 const main = document.querySelector(".main");
-const favoritMenu = document.getElementById("favoritMenu");
-const languageMenu = document.getElementById("languageMenu");
-// MENU HELP
-const helpMenu = document.getElementById("helpMenu");
 
+menu.addEventListener("click", function () {
+    main.classList.toggle("show");
+});
 if (helpMenu) {
     helpMenu.addEventListener("click", function (e) {
         e.preventDefault();

@@ -253,7 +253,6 @@ body {
 
 /* =====================================
    SIDEBAR MENU - REDESIGN
-===================================== */
 
 /* Container sidebar */
 .main {
@@ -368,7 +367,6 @@ body {
 
 /* =====================================
    FIX NAVBAR MOBILE
-===================================== */
 
 @media screen and (max-width: 600px) {
     .navbar {
