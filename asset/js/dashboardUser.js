@@ -558,6 +558,14 @@ favoriteSearch.addEventListener("input", function () {
 // ========================================
 // 13. MEMBUKA POPUP FAVORIT
 // ========================================
+// KATEGORI AKTIF DAN KATA KUNCI PENCARIAN
+let kategoriAktif = "Semua";
+let kataKunciProduk = "";
+
+// Mengambil seluruh tombol kategori
+const categoryButtons = document.querySelectorAll(".category-btn");
+// Pesan ketika produk tidak ditemukan
+const productEmptyState = document.createElement("div");
 
 favoriteMenu.addEventListener("click", function (event) {
 
@@ -570,6 +578,19 @@ favoriteMenu.addEventListener("click", function (event) {
     favoriteSearch.value = "";
 
     renderFavorites();
+// ==================================================
+// FUNGSI FILTER KATEGORI DAN PENCARIAN PRODUK
+// ==================================================
+
+function cariProduk(keyword = "") {
+
+    kataKunciProduk = keyword.trim().toLowerCase();
+
+    terapkanFilterProduk();
+
+}
+
+function terapkanFilterProduk() {
 
 });
 
@@ -592,6 +613,57 @@ const productPagination = document.getElementById("productPagination");
 
 let productCurrentPage = 1;
 const productPerPage = 8;
+        const kategoriProduk = card.querySelector(".product-info p")
+            ?.textContent.trim() || "";
+
+        // Filter kategori
+        const cocokKategori =
+            kategoriAktif === "Semua" ||
+            kategoriProduk === kategoriAktif;
+
+        // Filter pencarian
+        const cocokPencarian =
+            namaProduk.includes(kataKunciProduk) ||
+            kategoriProduk.toLowerCase().includes(kataKunciProduk);
+
+        return cocokKategori && cocokPencarian;
+
+    });
+
+    // Kembali ke halaman pertama
+    productCurrentPage = 1;
+
+    renderProductPagination();
+
+}
+// ==================================================
+// EVENT KLIK TOMBOL KATEGORI
+// ==================================================
+
+categoryButtons.forEach((button) => {
+
+    button.addEventListener("click", function () {
+
+        // Mengambil kategori yang dipilih
+        kategoriAktif = this.dataset.category;
+
+        // Menghapus status aktif dari semua tombol
+        categoryButtons.forEach((btn) => {
+            btn.classList.remove("active");
+        });
+
+        // Memberikan status aktif pada tombol terpilih
+        this.classList.add("active");
+
+        // Terapkan filter
+        terapkanFilterProduk();
+
+    });
+
+});
+// ==================================================
+// FUNGSI PAGINATION DAN TAMPILAN PRODUK
+// ==================================================
 
 // Menghitung jumlah halaman berdasarkan jumlah produk
 function renderProductPagination() {
