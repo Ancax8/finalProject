@@ -1,7 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../asset/css/navbar.css?v=2">
+</head>
+<body>
+    <div class="navbar">
+        <div class="profile">
+            <img src="../asset/gambar/bahan/profile.png" alt="#" id="profile" name="profile">
+            <label id="status"></label>
+        </div>
+        <div class="pencarian">
+            <input type="search" name="pencarian" id="pencarian" placeholder="cari produk...">
+            <img src="../asset/gambar/bahan/pencarian.png" alt="cari">
+        </div>
+        <div class="main">
+            <ul id="main">
+                <li href="#">Profile</li>
+                <li href="#" id="favoritMenu" >Favorit</li> 
+                <li href="#">Riwayat Pesanan</li> 
+                <li href="#">Language</li> 
+                <li href="#">Help</li> 
+            </ul>
+        </div>
+        <div class="icon-list" id="menu">
+            <i class="ph ph-list"></i>
+        </div>
+    </div>
+    <script src= ../asset/js/dashboardUser.js></script>
+    <script src="../asset/js/navbar.js"></script>
+</body>
+</html>
 <div class="navbar">
-    <div class="profile">
-        <img src="../asset/gambar/bahan/profile.png" alt="#" id="profile" name="profile">
+    <div class="profile profile-dropdown">
+
+        <img src="../asset/gambar/bahan/profile.png" alt="Profile" id="profile" name="profile">
+
         <label id="status"></label>
+
+        <div class="profile-menu" id="profileMenu">
+            <div class="logout-btn" id="logoutBtn">
+                <i class="ph ph-sign-out"></i>
+                <span data-id="Logout" data-en="Logout">Logout</span>
+            </div>
+        </div>
+
     </div>
 
     <div class="pencarian">
@@ -9,7 +55,7 @@
             data-en="search products...">
         <img src="../asset/gambar/bahan/pencarian.png" alt="cari">
     </div>
-
+    
     <div class="main">
         <ul id="main">
             <li>

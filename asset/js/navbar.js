@@ -1,11 +1,10 @@
 
 const menu = document.getElementById("menu");
 const main = document.querySelector(".main");
-const favoritMenu = document.getElementById("favoritMenu");
-const languageMenu = document.getElementById("languageMenu");
-// MENU HELP
-const helpMenu = document.getElementById("helpMenu");
 
+menu.addEventListener("click", function () {
+    main.classList.toggle("show");
+});
 if (helpMenu) {
     helpMenu.addEventListener("click", function (e) {
         e.preventDefault();
@@ -86,4 +85,23 @@ if (languageMenu) {
             );
         }
     });
+}
+// DROPDOWN PROFILE
+const profile = document.getElementById("profile");
+const profileMenu = document.getElementById("profileMenu");
+
+if (profile && profileMenu) {
+
+    profile.addEventListener("click", function (event) {
+        event.stopPropagation();
+        profileMenu.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!profileMenu.contains(event.target) &&
+            !profile.contains(event.target)) {
+            profileMenu.classList.remove("show");
+        }
+    });
+
 }
