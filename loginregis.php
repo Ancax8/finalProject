@@ -109,7 +109,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
             // HASH PASSWORD
             // ==========================================
 
-            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            // $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
             // ==========================================
             // SIMPAN DATA PENGGUNA
@@ -117,8 +117,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
 
             $insert = $db->prepare(
                 "INSERT INTO pengguna
-                (nama, username, telephone, email, password)
-                VALUES (?, ?, ?, ?, ?)"
+                (nama, username, telephone, email, password, id_role)
+                 VALUES (?, ?, ?, ?, ?, 4)"
             );
 
             $insert->bind_param(
@@ -127,7 +127,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
                 $username,
                 $telephone,
                 $email,
-                $passwordHash
+                $password
             );
 
             if ($insert->execute()) {
@@ -170,9 +170,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
     exit;
 }
 
-
 // ==========================================
-// PROSES LOGIN
+// PROSES LOGIN BERDASARKAN ROLE
 // ==========================================
 
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
@@ -180,11 +179,18 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $nama = trim($_POST['nama'] ?? '');
     $password = $_POST['pwd'] ?? '';
 
-    // Mencari pengguna berdasarkan username atau email
+    // Cari akun berdasarkan username atau email
     $stmt = $db->prepare(
-        "SELECT id_pengguna, nama, username, password
-         FROM pengguna
-         WHERE username = ? OR email = ?
+        "SELECT
+            p.id_pengguna,
+            p.nama,
+            p.username,
+            p.password,
+            p.id_role,
+            r.role_name
+         FROM pengguna p
+         INNER JOIN roles r ON p.id_role = r.id_role
+         WHERE p.username = ? OR p.email = ?
          LIMIT 1"
     );
 
@@ -194,33 +200,67 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $hasil = $stmt->get_result();
     $user = $hasil->fetch_assoc();
 
-    // Memeriksa password
-    if ($user && password_verify($password, $user['password'])) {
+    // Periksa password (sementara perbandingan biasa)
+    if ($user && $password === $user['password']) {
 
-        // Membuat session baru setelah login berhasil
         session_regenerate_id(true);
 
+        // Simpan identitas pengguna
         $_SESSION['user_id'] = $user['id_pengguna'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['nama'] = $user['nama'];
+        $_SESSION['id_role'] = $user['id_role'];
+        $_SESSION['role_name'] = $user['role_name'];
 
-        // Toast berhasil
-        $_SESSION['toast'] = [
-            "icon" => "success",
-            "title" => "Selamat Datang Kembali!",
-            "text" => "Login berhasil. Senang melihat kamu kembali!"
-        ];
+        // Tentukan dashboard berdasarkan role
+        switch ((int) $user['id_role']) {
 
-        // Redirect setelah toast
-        $_SESSION['redirect_after_toast'] = true;
+            case 1:
+                $tujuan = "dashboardSuper.php";
+                break;
+
+            case 2:
+                $tujuan = "dashboardAdmin.php";
+                break;
+
+            case 3:
+                $tujuan = "dashboardAkuntan.php";
+                break;
+
+            case 4:
+                $tujuan = "pages/dashboardUser.php";
+                break;
+
+            default:
+                $tujuan = null;
+                break;
+        }
+
+        if ($tujuan !== null) {
+
+            $_SESSION['toast'] = [
+                "icon" => "success",
+                "title" => "Login Berhasil!",
+                "text" => "Selamat datang, " . $user['nama'] . "!"
+            ];
+
+            $_SESSION['redirect_after_toast'] = $tujuan;
+
+        } else {
+
+            $_SESSION['toast'] = [
+                "icon" => "error",
+                "title" => "Role Tidak Dikenali!",
+                "text" => "Silakan hubungi administrator."
+            ];
+        }
 
     } else {
 
-        // Toast gagal
         $_SESSION['toast'] = [
             "icon" => "error",
             "title" => "Login Gagal!",
-            "text" => "Username atau password yang kamu masukkan tidak sesuai."
+            "text" => "Username atau password tidak sesuai."
         ];
     }
 
@@ -229,5 +269,4 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     header("Location: form.php");
     exit;
 }
-
 ?>
