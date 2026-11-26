@@ -1,107 +1,169 @@
 
-const menu = document.getElementById("menu");
-const main = document.querySelector(".main");
+document.addEventListener("DOMContentLoaded", function () {
 
-menu.addEventListener("click", function () {
-    main.classList.toggle("show");
-});
-if (helpMenu) {
-    helpMenu.addEventListener("click", function (e) {
-        e.preventDefault();
+    // =================================
+    // NAVBAR USER
+    // =================================
 
-        document.dispatchEvent(
-            new CustomEvent("bukaHelp")
-        );
-    });
-}
+    const userMenu = document.querySelector(".user-navbar #menu");
+    const userMain = document.querySelector(".user-navbar .main");
 
-// MENU FAVORIT
-if (favoritMenu) {
-    favoritMenu.addEventListener("click", function () {
-        document.dispatchEvent(
-            new CustomEvent("bukaFavorite")
-        );
-    });
-}
+    const favoritMenu = document.getElementById("favoritMenu");
+    const languageMenu = document.getElementById("languageMenu");
+    const helpMenu = document.getElementById("helpMenu");
 
-// MENU HAMBURGER
-if (menu && main) {
-    menu.addEventListener("click", function () {
-        main.classList.toggle("show");
-    });
-}
-
-// FUNGSI MENGUBAH BAHASA
-function terapkanBahasa(bahasa) {
-    document.documentElement.lang = bahasa;
-
-    document.querySelectorAll("[data-id][data-en]").forEach(function (element) {
-        element.textContent = element.getAttribute(
-            bahasa === "en" ? "data-en" : "data-id"
-        );
-    });
-
-    const pencarian = document.getElementById("pencarian");
-
-    if (pencarian) {
-        pencarian.placeholder = pencarian.getAttribute(
-            bahasa === "en" ? "data-en" : "data-id"
-        );
+    // HAMBURGER USER
+    if (userMenu && userMain) {
+        userMenu.addEventListener("click", function () {
+            userMain.classList.toggle("show");
+        });
     }
-    document.dispatchEvent(
-        new CustomEvent("bahasaDiubah")
-    );
-}
 
-// MEMUAT BAHASA TERSIMPAN
-const bahasaTersimpan = localStorage.getItem("bahasa") || "id";
+    // MENU FAVORIT
+    if (favoritMenu) {
+        favoritMenu.addEventListener("click", function (e) {
+            e.preventDefault();
 
-terapkanBahasa(bahasaTersimpan);
+            document.dispatchEvent(
+                new CustomEvent("bukaFavorite")
+            );
+        });
+    }
 
-// MENU LANGUAGE
-if (languageMenu) {
-    languageMenu.addEventListener("click", function (e) {
-        e.preventDefault();
+    // MENU HELP
+    if (helpMenu) {
+        helpMenu.addEventListener("click", function (e) {
+            e.preventDefault();
 
-        const bahasaSekarang = localStorage.getItem("bahasa") || "id";
-        const bahasaTujuan = bahasaSekarang === "id" ? "en" : "id";
+            document.dispatchEvent(
+                new CustomEvent("bukaHelp")
+            );
+        });
+    }
 
-        const namaBahasa = bahasaTujuan === "en"
-            ? "English"
-            : "Bahasa Indonesia";
+    // =================================
+    // NAVBAR ADMIN
+    // =================================
 
-        const konfirmasi = confirm(
-            `Apakah Anda yakin ingin mengubah bahasa ke ${namaBahasa}?`
-        );
+    const adminMenu = document.getElementById("adminMenu");
+    const adminSidebar = document.querySelector(".admin-sidebar");
+    const sidebarOverlay = document.querySelector(".sidebar-overlay");
+    const sidebarClose = document.querySelector(".sidebar-close");
 
-        if (konfirmasi) {
-            localStorage.setItem("bahasa", bahasaTujuan);
-            terapkanBahasa(bahasaTujuan);
+    function bukaSidebarAdmin() {
+        if (!adminSidebar) return;
 
-            alert(
-                bahasaTujuan === "en"
-                    ? "Language successfully changed to English!"
-                    : "Bahasa berhasil diubah ke Bahasa Indonesia!"
+        adminSidebar.classList.add("show");
+
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.add("show");
+        }
+
+        if (adminMenu) {
+            adminMenu.setAttribute("aria-expanded", "true");
+        }
+    }
+
+    function tutupSidebarAdmin() {
+        if (!adminSidebar) return;
+
+        adminSidebar.classList.remove("show");
+
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove("show");
+        }
+
+        if (adminMenu) {
+            adminMenu.setAttribute("aria-expanded", "false");
+        }
+    }
+
+    // HAMBURGER ADMIN
+    if (adminMenu && adminSidebar) {
+        adminMenu.addEventListener("click", function () {
+            if (adminSidebar.classList.contains("show")) {
+                tutupSidebarAdmin();
+            } else {
+                bukaSidebarAdmin();
+            }
+        });
+    }
+
+    // TOMBOL X SIDEBAR ADMIN
+    if (sidebarClose) {
+        sidebarClose.addEventListener("click", tutupSidebarAdmin);
+    }
+
+    // KLIK OVERLAY
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener("click", tutupSidebarAdmin);
+    }
+
+    // TUTUP DENGAN ESCAPE
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            tutupSidebarAdmin();
+        }
+    });
+
+    // =================================
+    // SISTEM BAHASA USER
+    // =================================
+
+    function terapkanBahasa(bahasa) {
+        document.documentElement.lang = bahasa;
+
+        document.querySelectorAll("[data-id][data-en]").forEach(function (element) {
+            element.textContent = element.getAttribute(
+                bahasa === "en" ? "data-en" : "data-id"
+            );
+        });
+
+        const pencarian = document.getElementById("pencarian");
+
+        if (pencarian) {
+            pencarian.placeholder = pencarian.getAttribute(
+                bahasa === "en" ? "data-en" : "data-id"
             );
         }
-    });
-}
-// DROPDOWN PROFILE
-const profile = document.getElementById("profile");
-const profileMenu = document.getElementById("profileMenu");
 
-if (profile && profileMenu) {
+        document.dispatchEvent(
+            new CustomEvent("bahasaDiubah")
+        );
+    }
 
-    profile.addEventListener("click", function (event) {
-        event.stopPropagation();
-        profileMenu.classList.toggle("show");
-    });
+    // MEMUAT BAHASA TERSIMPAN
+    const bahasaTersimpan = localStorage.getItem("bahasa") || "id";
 
-    document.addEventListener("click", function (event) {
-        if (!profileMenu.contains(event.target) &&
-            !profile.contains(event.target)) {
-            profileMenu.classList.remove("show");
-        }
-    });
+    terapkanBahasa(bahasaTersimpan);
 
-}
+    // MENU LANGUAGE
+    if (languageMenu) {
+        languageMenu.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const bahasaSekarang = localStorage.getItem("bahasa") || "id";
+            const bahasaTujuan = bahasaSekarang === "id" ? "en" : "id";
+
+            const namaBahasa = bahasaTujuan === "en"
+                ? "English"
+                : "Bahasa Indonesia";
+
+            const konfirmasi = confirm(
+                `Apakah Anda yakin ingin mengubah bahasa ke ${namaBahasa}?`
+            );
+
+            if (konfirmasi) {
+                localStorage.setItem("bahasa", bahasaTujuan);
+                terapkanBahasa(bahasaTujuan);
+
+                alert(
+                    bahasaTujuan === "en"
+                        ? "Language successfully changed to English!"
+                        : "Bahasa berhasil diubah ke Bahasa Indonesia!"
+                );
+            }
+        });
+    }
+
+});

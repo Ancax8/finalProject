@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../auth.php';
+wajibLogin([4]);
+?>
 <!DOCTYPE html>
 <html lang="id">
 

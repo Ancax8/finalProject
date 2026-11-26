@@ -1,4 +1,7 @@
-
+<?php
+require_once __DIR__ . '/auth.php';
+wajibLogin([1]);
+?>
 <?php
 ob_start();
 
