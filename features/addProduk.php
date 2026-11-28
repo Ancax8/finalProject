@@ -1,4 +1,14 @@
 
+<?php
+// Ambil kategori yang berstatus aktif
+$dataKategori = $db->query("
+    SELECT id_kategori, nama_kategori
+    FROM kategori
+    WHERE status = 'aktif'
+    ORDER BY nama_kategori ASC
+");
+?>
+
 <!-- ==========================================
      FORM TAMBAH PRODUK
 ========================================== -->
@@ -15,7 +25,6 @@
         method="POST"
         enctype="multipart/form-data">
 
-        <!-- NAMA BARANG -->
         <div class="form-group">
             <label for="nama_barang">Nama Barang</label>
             <input
@@ -26,19 +35,17 @@
                 required>
         </div>
 
-        <!-- GAMBAR -->
         <div class="form-group">
             <label for="gambar">Gambar Produk</label>
             <input
                 type="file"
                 id="gambar"
                 name="gambar"
-                accept="image/*"
+                accept=".jpg,.jpeg,.png,.webp"
                 required>
             <small>Format gambar JPG, JPEG, PNG, atau WEBP.</small>
         </div>
 
-        <!-- STOK -->
         <div class="form-group">
             <label for="stok_barang">Jumlah Stok</label>
             <input
@@ -50,7 +57,6 @@
                 required>
         </div>
 
-        <!-- HARGA -->
         <div class="form-group">
             <label for="harga_barang">Harga Barang</label>
             <input
@@ -63,7 +69,6 @@
                 required>
         </div>
 
-        <!-- KATEGORI -->
         <div class="form-group">
             <label for="kategori">Kategori Barang</label>
 
@@ -73,16 +78,18 @@
                 required>
 
                 <option value="">-- Pilih Kategori --</option>
-                <option value="Alat Tulis">Alat Tulis</option>
-                <option value="Buku">Buku</option>
-                <option value="Kertas">Kertas</option>
-                <option value="Perlengkapan Kantor">Perlengkapan Kantor</option>
-                <option value="Lainnya">Lainnya</option>
+
+                <?php if ($dataKategori): ?>
+                    <?php while ($kategori = $dataKategori->fetch_assoc()): ?>
+                        <option value="<?= (int) $kategori['id_kategori'] ?>">
+                            <?= htmlspecialchars($kategori['nama_kategori']) ?>
+                        </option>
+                    <?php endwhile; ?>
+                <?php endif; ?>
 
             </select>
         </div>
 
-        <!-- DESKRIPSI -->
         <div class="form-group">
             <label for="deskripsi">Deskripsi Produk</label>
             <textarea
@@ -92,7 +99,6 @@
                 required></textarea>
         </div>
 
-        <!-- TOMBOL SIMPAN -->
         <button
             type="submit"
             name="tambah"

@@ -1,4 +1,10 @@
+
 <?php
+
+// Pastikan session aktif
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // ==========================================
 // PROSES REGISTER
@@ -6,14 +12,14 @@
 
 if (isset($_POST['action']) && $_POST['action'] === 'create') {
 
-    // Mengambil dan membersihkan data
-    $nama = trim($_POST['nma'] ?? '');
-    $username = trim($_POST['nma3'] ?? '');
+    // Ambil dan bersihkan data
+    $nama      = trim($_POST['nma'] ?? '');
+    $username  = trim($_POST['nma3'] ?? '');
     $telephone = trim($_POST['tlp'] ?? '');
-    $email = strtolower(trim($_POST['mail'] ?? ''));
-    $password = $_POST['pw'] ?? '';
+    $email     = strtolower(trim($_POST['mail'] ?? ''));
+    $password  = $_POST['pw'] ?? '';
 
-    // Validasi input kosong
+    // Validasi data kosong
     if (
         $nama === '' ||
         $username === '' ||
@@ -21,35 +27,36 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
         $email === '' ||
         $password === ''
     ) {
-
         $_SESSION['toast'] = [
             "icon" => "error",
             "title" => "Data Belum Lengkap!",
             "text" => "Silakan lengkapi seluruh formulir pendaftaran."
         ];
 
-        // Validasi format email
+    // Validasi email
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
         $_SESSION['toast'] = [
             "icon" => "error",
             "title" => "Email Tidak Valid!",
             "text" => "Silakan masukkan alamat email yang benar."
         ];
 
-        // Validasi panjang password
-    } elseif (strlen($password) < 8) {
+    // Validasi nomor telepon
+    } elseif (!preg_match('/^[0-9]{10,15}$/', $telephone)) {
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Nomor Telepon Tidak Valid!",
+            "text" => "Nomor telepon harus terdiri dari 10 sampai 15 digit."
+        ];
 
+    // Validasi password
+    } elseif (strlen($password) < 8) {
         $_SESSION['toast'] = [
             "icon" => "error",
             "title" => "Password Terlalu Pendek!",
             "text" => "Password harus memiliki minimal 8 karakter."
         ];
 
-        $_SESSION['active_form'] = 'register';
-
-        header("Location: form.php");
-        exit;
     } else {
 
         // ==========================================
@@ -57,7 +64,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
         // ==========================================
 
         $cekUsername = $db->prepare(
-            "SELECT id_pengguna FROM pengguna WHERE username = ?"
+            "SELECT id_user FROM Users WHERE username = ? LIMIT 1"
         );
 
         $cekUsername->bind_param("s", $username);
@@ -69,14 +76,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
         // ==========================================
 
         $cekEmail = $db->prepare(
-            "SELECT id_pengguna FROM pengguna WHERE email = ?"
+            "SELECT id_user FROM Users WHERE email = ? LIMIT 1"
         );
 
         $cekEmail->bind_param("s", $email);
         $cekEmail->execute();
         $hasilEmail = $cekEmail->get_result();
 
-        // Username dan email sudah digunakan
+        // ==========================================
+        // VALIDASI DUPLIKASI
+        // ==========================================
+
         if ($hasilUsername->num_rows > 0 && $hasilEmail->num_rows > 0) {
 
             $_SESSION['toast'] = [
@@ -85,7 +95,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
                 "text" => "Username dan email sudah digunakan."
             ];
 
-            // Username sudah digunakan
         } elseif ($hasilUsername->num_rows > 0) {
 
             $_SESSION['toast'] = [
@@ -94,7 +103,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
                 "text" => "Silakan gunakan username yang berbeda."
             ];
 
-            // Email sudah digunakan
         } elseif ($hasilEmail->num_rows > 0) {
 
             $_SESSION['toast'] = [
@@ -109,25 +117,25 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
             // HASH PASSWORD
             // ==========================================
 
-            // $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
             // ==========================================
-            // SIMPAN DATA PENGGUNA
+            // SIMPAN DATA USER
             // ==========================================
 
             $insert = $db->prepare(
-                "INSERT INTO pengguna
-                (nama, username, telephone, email, password, id_role)
-                 VALUES (?, ?, ?, ?, ?, 4)"
+                "INSERT INTO Users
+                (id_role, fullname, telephone, email, username, password)
+                VALUES (4, ?, ?, ?, ?, ?)"
             );
 
             $insert->bind_param(
                 "sssss",
                 $nama,
-                $username,
                 $telephone,
                 $email,
-                $password
+                $username,
+                $passwordHash
             );
 
             if ($insert->execute()) {
@@ -140,16 +148,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
 
             } else {
 
-                // Penanganan jika terjadi duplikasi saat INSERT
                 if ($insert->errno === 1062) {
-
                     $_SESSION['toast'] = [
                         "icon" => "error",
                         "title" => "Data Sudah Digunakan!",
                         "text" => "Username atau email sudah terdaftar."
                     ];
-
                 } else {
+                    error_log("Register error: " . $insert->error);
 
                     $_SESSION['toast'] = [
                         "icon" => "error",
@@ -166,9 +172,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
         $cekEmail->close();
     }
 
+    $_SESSION['active_form'] = 'register';
+
     header("Location: form.php");
     exit;
 }
+
 
 // ==========================================
 // PROSES LOGIN BERDASARKAN ROLE
@@ -176,44 +185,92 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
 
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
 
-    $nama = trim($_POST['nama'] ?? '');
+    $usernameOrEmail = trim($_POST['nama'] ?? '');
     $password = $_POST['pwd'] ?? '';
 
     // Cari akun berdasarkan username atau email
     $stmt = $db->prepare(
         "SELECT
-            p.id_pengguna,
-            p.nama,
-            p.username,
-            p.password,
-            p.id_role,
+            u.id_user,
+            u.id_role,
+            u.fullname,
+            u.email,
+            u.username,
+            u.password,
+            u.status,
             r.role_name
-         FROM pengguna p
-         INNER JOIN roles r ON p.id_role = r.id_role
-         WHERE p.username = ? OR p.email = ?
+         FROM Users u
+         INNER JOIN Roles r ON u.id_role = r.id_role
+         WHERE u.username = ? OR u.email = ?
          LIMIT 1"
     );
 
-    $stmt->bind_param("ss", $nama, $nama);
+    if (!$stmt) {
+        error_log("Login prepare error: " . $db->error);
+
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Terjadi Kesalahan!",
+            "text" => "Sistem tidak dapat memproses login."
+        ];
+
+        header("Location: form.php");
+        exit;
+    }
+
+    $stmt->bind_param("ss", $usernameOrEmail, $usernameOrEmail);
     $stmt->execute();
 
     $hasil = $stmt->get_result();
     $user = $hasil->fetch_assoc();
 
-    // Periksa password (sementara perbandingan biasa)
-    if ($user && $password === $user['password']) {
+    // ==========================================
+    // VALIDASI AKUN
+    // ==========================================
+
+    if (!$user) {
+
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Login Gagal!",
+            "text" => "Username atau password tidak sesuai."
+        ];
+
+    } elseif ((int)$user['status'] !== 1) {
+
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Akun Tidak Aktif!",
+            "text" => "Silakan hubungi administrator."
+        ];
+
+    } elseif (!password_verify($password, $user['password'])) {
+
+        $_SESSION['toast'] = [
+            "icon" => "error",
+            "title" => "Login Gagal!",
+            "text" => "Username atau password tidak sesuai."
+        ];
+
+    } else {
+
+        // ==========================================
+        // LOGIN BERHASIL
+        // ==========================================
 
         session_regenerate_id(true);
 
-        // Simpan identitas pengguna
-        $_SESSION['user_id'] = $user['id_pengguna'];
+        $_SESSION['user_id'] = $user['id_user'];
         $_SESSION['username'] = $user['username'];
-        $_SESSION['nama'] = $user['nama'];
+        $_SESSION['nama'] = $user['fullname'];
         $_SESSION['id_role'] = $user['id_role'];
         $_SESSION['role_name'] = $user['role_name'];
 
-        // Tentukan dashboard berdasarkan role
-        switch ((int) $user['id_role']) {
+        // ==========================================
+        // REDIRECT BERDASARKAN ROLE
+        // ==========================================
+
+        switch ((int)$user['id_role']) {
 
             case 1:
                 $tujuan = "dashboardSuper.php";
@@ -241,7 +298,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
             $_SESSION['toast'] = [
                 "icon" => "success",
                 "title" => "Login Berhasil!",
-                "text" => "Selamat datang, " . $user['nama'] . "!"
+                "text" => "Selamat datang, " . $user['fullname'] . "!"
             ];
 
             $_SESSION['redirect_after_toast'] = $tujuan;
@@ -254,14 +311,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
                 "text" => "Silakan hubungi administrator."
             ];
         }
-
-    } else {
-
-        $_SESSION['toast'] = [
-            "icon" => "error",
-            "title" => "Login Gagal!",
-            "text" => "Username atau password tidak sesuai."
-        ];
     }
 
     $stmt->close();
@@ -269,4 +318,5 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     header("Location: form.php");
     exit;
 }
+
 ?>
